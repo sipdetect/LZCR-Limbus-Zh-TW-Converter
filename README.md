@@ -2,8 +2,9 @@
 
 Limbus Company 零協會文本正體中文轉換工具
 
+<img width="852" height="431" alt="{C245EE0B-2ED8-4DCE-A2C8-114499105A22}" src="https://github.com/user-attachments/assets/a6d80803-b19b-4ba2-b7d4-48ecafd6a072" />
 
-<img width="1389" height="695" alt="{6D2F9818-BA07-4749-A517-1CF5DD984CF7}" src="https://github.com/user-attachments/assets/17225f2f-c7ae-477d-bcc2-4ef1e9f1c0eb" />
+
 
 執行後會自動將遊戲改為正體中文
 
@@ -15,20 +16,18 @@ Limbus Company 零協會文本正體中文轉換工具
 
 遊戲劇情文本 : 零協會的文本釋出時間 https://github.com/LocalizeLimbusCompany/LocalizeLimbusCompany
 
-戰鬥氣泡文本 : 這邊是使用 https://github.com/NotherWael/LimbusDialogueBoxes_EN 所提供的文本 , 透過 LLM 中文化 , 完全符合罪人的風格
+戰鬥氣泡文本 : 這邊也同時改為跟零協會同步的文本 , 同時通過正則表達式在轉換途中幫戰鬥氣泡上屬於罪人的代表色
 
 ---
 
 # 軟體 Icon
 目前還沒有合適的 Icon , 假如有熱心人士想要提供協助可以聯絡以下信箱
 
- Email : ayin@mail[.]binah[.]tw
-
- 請麻煩把[]去掉是為了避免機器人爬蟲
-
+ Email : ayin@mail.ibinah.com
+ 
  ---
 
  # 安全
- <img width="2197" height="1248" alt="{BC4F96DA-5493-40CE-9D4D-B73EB2151239}" src="https://github.com/user-attachments/assets/99d3206b-8d53-44c6-aa8b-75b25e8caf0c" />
-
+ 
+ <img width="1131" height="656" alt="{AD117E40-3AFB-4204-A84D-23AF344E64F8}" src="https://github.com/user-attachments/assets/fd6b1618-76a0-418a-8e65-b1173ec103fb" />
  基本上無問題 , 如果有安全疑慮可以審視程式碼並且自己構建
