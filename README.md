@@ -33,8 +33,6 @@ Email : ayin@mail.ibinah.com
 而轉換器沒有語義理解，只能靠「詞庫最長匹配 + 單字預設候選」。
 多個候選時必然有選錯的，且官方詞庫的預設不一定符合台灣用語。
 
-解法不是改引擎，而是**在官方詞庫前後各掛一層自訂詞典**：
-
 ```
 簡體原文
    │
@@ -121,12 +119,6 @@ lzcr/
     conversion_test.rs   詞庫回歸測試
 ```
 
-## 系統需求
-
-- Windows 10 或更新版本（主要支援平台）
-- 已透過 Steam 安裝 Limbus Company
-- 網路連線（下載 GitHub Release）
-
 ## 使用方式
 
 ### TUI 模式（預設）
@@ -164,11 +156,6 @@ cargo build --release
 
 或使用專案根目錄的 `build_and_copy_to_desktop.cmd`（會複製到**系統實際桌面**的 `LZCR-Build`）。
 
-## 輸出位置
-
-- 正體中文語言包：`{遊戲目錄}/LimbusCompany_Data/Lang/LLC_zh-Hant/`
-- 版本記錄：`{遊戲目錄}/LimbusCompany_Data/Lang/lzcr-info.json`
-- 遊戲語言設定：`{遊戲目錄}/LimbusCompany_Data/Lang/config.json`（僅在不存在時建立）
 
 ## 測試
 
