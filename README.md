@@ -15,6 +15,7 @@ Limbus Company 零協會文本正體中文轉換工具
 
 戰鬥氣泡文本：這邊也同時改為跟零協會同步的文本，同時通過正則表達式在轉換途中幫戰鬥氣泡上屬於罪人的代表色
 
+## 解決Bug 或 解除安裝本程式
 如有 卡住 或是 安裝過其他漢化 可以透過下面的動作移除該資料夾後再使用本程式
 
 <img width="718" height="897" alt="圖片" src="https://github.com/user-attachments/assets/857169dc-bee3-40ca-afdb-5593fdc850b9" />
