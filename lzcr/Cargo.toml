@@ -1,0 +1,36 @@
+[package]
+name = "lzcr"
+version = "1.2.0"
+description = "Limbus Company 零協會文本正體中文轉換工具"
+authors = ["LZCR Contributors"]
+license = "MIT"
+repository = "https://github.com/sipdetect/LZCR-Limbus-Zh-TW-Converter"
+edition = "2021"
+
+[lib]
+name = "lzcr"
+path = "src/lib.rs"
+
+[[bin]]
+name = "lzcr"
+path = "src/main.rs"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+reqwest = { version = "0.11", features = ["blocking", "json"] }
+zip = "0.6"
+simplecc = { version = "0.2", features = ["builtin_dicts"] }
+include_dir = "0.7"
+crossterm = "0.28"
+ratatui = "0.29"
+chrono = { version = "0.4", features = ["clock"] }
+regex = "1.13.1"
+
+[target.'cfg(windows)'.dependencies]
+winreg = "0.11"
+
+[dev-dependencies]
+reqwest = { version = "0.11", features = ["blocking", "json"] }
+zip = "0.6"
+serde = { version = "1.0", features = ["derive"] }

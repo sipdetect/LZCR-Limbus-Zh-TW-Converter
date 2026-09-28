@@ -1,6 +1,6 @@
 # Build outputs
 /target/
-/src-tui/target/
+/lzcr/target/
 **/*.pdb
 **/*.rlib
 node_modules/

@@ -6,22 +6,20 @@ use winreg::enums::*;
 #[cfg(target_os = "windows")]
 use winreg::RegKey;
 
-/// Limbus Company 的 Steam App ID
 const LIMBUS_COMPANY_APP_ID: &str = "1973530";
 
 #[cfg(target_os = "windows")]
 pub fn find_steam_path() -> Result<PathBuf, AppError> {
     let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
 
-    // Try reading Steam installation path from registry
     let steam_key = hklm
         .open_subkey("SOFTWARE\\WOW6432Node\\Valve\\Steam")
         .or_else(|_| hklm.open_subkey("SOFTWARE\\Valve\\Steam"))
-        .map_err(|e| AppError::Other(format!("Could not find Steam registry key: {}", e)))?;
+        .map_err(|e| AppError::Other(format!("找不到 Steam 登錄路徑: {}", e)))?;
 
     let install_path: String = steam_key
         .get_value("InstallPath")
-        .map_err(|e| AppError::Other(format!("Could not read Steam installation path: {}", e)))?;
+        .map_err(|e| AppError::Other(format!("無法讀取 Steam 安裝路徑: {}", e)))?;
 
     Ok(PathBuf::from(install_path))
 }
@@ -29,8 +27,6 @@ pub fn find_steam_path() -> Result<PathBuf, AppError> {
 #[cfg(target_os = "windows")]
 pub fn find_limbus_company_path() -> Result<PathBuf, AppError> {
     let steam_path = find_steam_path()?;
-
-    // Check for game in Steam directory
     let steamapps_path = steam_path.join("steamapps");
     let limbus_path = steamapps_path.join("common").join("Limbus Company");
 
@@ -38,55 +34,37 @@ pub fn find_limbus_company_path() -> Result<PathBuf, AppError> {
         return Ok(limbus_path);
     }
 
-    // If not found at default location, try reading libraryfolders.vdf to find other install locations
     let library_folders_path = steamapps_path.join("libraryfolders.vdf");
     if library_folders_path.exists() {
         if let Ok(content) = std::fs::read_to_string(&library_folders_path) {
-            // Parse VDF format to find all Steam Library paths
-            let library_paths = parse_library_paths(&content);
-
-            for lib_path in library_paths {
-                let potential_path = lib_path
-                    .join("steamapps")
-                    .join("common")
-                    .join("Limbus Company");
-                if potential_path.exists() {
-                    return Ok(potential_path);
-                }
-
-                // Also check SteamApps directory (case variant)
-                let potential_path_alt = lib_path
-                    .join("SteamApps")
-                    .join("common")
-                    .join("Limbus Company");
-                if potential_path_alt.exists() {
-                    return Ok(potential_path_alt);
+            for lib_path in parse_library_paths(&content) {
+                for subpath in ["steamapps", "SteamApps"] {
+                    let potential_path = lib_path.join(subpath).join("common").join("Limbus Company");
+                    if potential_path.exists() {
+                        return Ok(potential_path);
+                    }
                 }
             }
         }
     }
 
-    // Try finding through Steam registry game entry
     if let Ok(game_path) = find_game_by_steam_registry() {
         return Ok(game_path);
     }
 
-    // Finally try common installation paths
-    let common_paths = vec![
+    for path in [
         PathBuf::from("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Limbus Company"),
         PathBuf::from("C:\\Program Files\\Steam\\steamapps\\common\\Limbus Company"),
         PathBuf::from("D:\\Steam\\steamapps\\common\\Limbus Company"),
         PathBuf::from("E:\\Steam\\steamapps\\common\\Limbus Company"),
-    ];
-
-    for path in common_paths {
+    ] {
         if path.exists() {
             return Ok(path);
         }
     }
 
     Err(AppError::Other(
-        "Could not find Limbus Company game directory".to_string(),
+        "找不到 Limbus Company 遊戲目錄".to_string(),
     ))
 }
 
@@ -94,43 +72,32 @@ pub fn find_limbus_company_path() -> Result<PathBuf, AppError> {
 fn find_game_by_steam_registry() -> Result<PathBuf, AppError> {
     let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
 
-    // Try finding from Steam game registry entry
-    let uninstall_path = format!(
-        "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {}",
-        LIMBUS_COMPANY_APP_ID
-    );
-
-    if let Ok(game_key) = hklm.open_subkey(&uninstall_path) {
-        if let Ok(install_location) = game_key.get_value::<String, _>("InstallLocation") {
-            let game_path = PathBuf::from(install_location);
-            if game_path.exists() {
-                return Ok(game_path);
-            }
-        }
-    }
-
-    // Try WOW6432Node path
-    let uninstall_path_wow = format!(
-        "SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {}",
-        LIMBUS_COMPANY_APP_ID
-    );
-
-    if let Ok(game_key) = hklm.open_subkey(&uninstall_path_wow) {
-        if let Ok(install_location) = game_key.get_value::<String, _>("InstallLocation") {
-            let game_path = PathBuf::from(install_location);
-            if game_path.exists() {
-                return Ok(game_path);
+    for uninstall_path in [
+        format!(
+            "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {}",
+            LIMBUS_COMPANY_APP_ID
+        ),
+        format!(
+            "SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App {}",
+            LIMBUS_COMPANY_APP_ID
+        ),
+    ] {
+        if let Ok(game_key) = hklm.open_subkey(&uninstall_path) {
+            if let Ok(install_location) = game_key.get_value::<String, _>("InstallLocation") {
+                let game_path = PathBuf::from(install_location);
+                if game_path.exists() {
+                    return Ok(game_path);
+                }
             }
         }
     }
 
     Err(AppError::Other(
-        "Game installation path not found in registry".to_string(),
+        "登錄中找不到遊戲安裝路徑".to_string(),
     ))
 }
 
-#[cfg(target_os = "windows")]
-fn parse_library_paths(vdf_content: &str) -> Vec<PathBuf> {
+pub fn parse_library_paths(vdf_content: &str) -> Vec<PathBuf> {
     let mut paths = Vec::new();
     let mut inside_library_folders = false;
     let mut brace_count = 0;
@@ -138,21 +105,17 @@ fn parse_library_paths(vdf_content: &str) -> Vec<PathBuf> {
     for line in vdf_content.lines() {
         let trimmed = line.trim();
 
-        // Check if entering libraryfolders block
         if trimmed.starts_with("\"libraryfolders\"") {
             inside_library_folders = true;
             continue;
         }
 
         if inside_library_folders {
-            // Count braces to track level
             brace_count += trimmed.chars().filter(|&c| c == '{').count() as i32;
             brace_count -= trimmed.chars().filter(|&c| c == '}').count() as i32;
 
-            // If path field is found
             if trimmed.starts_with("\"path\"") {
                 if let Some(path_str) = extract_quoted_value(trimmed) {
-                    // Handle double backslashes in Windows paths
                     let normalized_path = path_str.replace("\\\\", "\\");
                     let path = PathBuf::from(normalized_path);
                     if path.exists() {
@@ -161,7 +124,6 @@ fn parse_library_paths(vdf_content: &str) -> Vec<PathBuf> {
                 }
             }
 
-            // If brace count returns to zero and we are in libraryfolders block, end parsing
             if brace_count <= 0 && inside_library_folders {
                 break;
             }
@@ -171,9 +133,7 @@ fn parse_library_paths(vdf_content: &str) -> Vec<PathBuf> {
     paths
 }
 
-#[cfg(target_os = "windows")]
 fn extract_quoted_value(line: &str) -> Option<String> {
-    // Extract path from lines like: "path"    "C:\\Games\\Steam"
     let parts: Vec<&str> = line.split('"').collect();
     if parts.len() >= 4 {
         return Some(parts[3].to_string());
@@ -183,9 +143,8 @@ fn extract_quoted_value(line: &str) -> Option<String> {
 
 #[cfg(not(target_os = "windows"))]
 pub fn find_steam_path() -> Result<PathBuf, AppError> {
-    // Try common Steam paths for Linux/macOS
     let home_dir = std::env::var("HOME")
-        .map_err(|_| AppError::Other("Could not get HOME directory".to_string()))?;
+        .map_err(|_| AppError::Other("無法取得 HOME 目錄".to_string()))?;
 
     #[cfg(target_os = "linux")]
     let steam_paths = vec![
@@ -210,7 +169,7 @@ pub fn find_steam_path() -> Result<PathBuf, AppError> {
     }
 
     Err(AppError::Other(
-        "Could not find Steam installation directory".to_string(),
+        "找不到 Steam 安裝目錄".to_string(),
     ))
 }
 
@@ -226,13 +185,10 @@ pub fn find_limbus_company_path() -> Result<PathBuf, AppError> {
         return Ok(limbus_path);
     }
 
-    // Try parsing libraryfolders.vdf
     let library_folders_path = steam_path.join("steamapps").join("libraryfolders.vdf");
     if library_folders_path.exists() {
         if let Ok(content) = std::fs::read_to_string(&library_folders_path) {
-            let library_paths = parse_library_paths(&content);
-
-            for lib_path in library_paths {
+            for lib_path in parse_library_paths(&content) {
                 let potential_path = lib_path
                     .join("steamapps")
                     .join("common")
@@ -245,7 +201,7 @@ pub fn find_limbus_company_path() -> Result<PathBuf, AppError> {
     }
 
     Err(AppError::Other(
-        "Could not find Limbus Company game directory".to_string(),
+        "找不到 Limbus Company 遊戲目錄".to_string(),
     ))
 }
 
@@ -253,16 +209,37 @@ pub fn get_lang_folder_path() -> Result<PathBuf, AppError> {
     let game_path = find_limbus_company_path()?;
     let lang_path = game_path.join("LimbusCompany_Data").join("Lang");
 
-    // Ensure Lang folder exists
     if !lang_path.exists() {
-        std::fs::create_dir_all(&lang_path)
-            .map_err(|e| AppError::Other(format!("Failed to create Lang folder: {}", e)))?;
+        std::fs::create_dir_all(&lang_path).map_err(|e| {
+            AppError::Other(format!("無法建立 Lang 資料夾: {}", e))
+        })?;
     }
 
     Ok(lang_path)
 }
 
-/* pub fn get_config_path() -> Result<PathBuf, AppError> {
-    let lang_path = get_lang_folder_path()?;
-    Ok(lang_path.join("config.json"))
-} */
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_library_paths_extracts_paths() {
+        let existing = std::env::temp_dir();
+        let escaped = existing.display().to_string().replace('\\', "\\\\");
+        let vdf = format!(
+            r#"
+"libraryfolders"
+{{
+    "0"
+    {{
+        "path"        "{escaped}"
+    }}
+}}
+"#
+        );
+
+        let paths = parse_library_paths(&vdf);
+        assert_eq!(paths.len(), 1);
+        assert_eq!(paths[0], existing);
+    }
+}

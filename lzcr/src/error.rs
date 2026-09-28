@@ -1,5 +1,3 @@
-use reqwest;
-use serde_json;
 use std::error::Error;
 use std::fmt;
 use std::io;
@@ -11,17 +9,19 @@ pub enum AppError {
     Io(io::Error),
     Json(serde_json::Error),
     Zip(ZipError),
+    Cancelled,
     Other(String),
 }
 
 impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            AppError::Network(e) => write!(f, "Network error: {}", e),
-            AppError::Io(e) => write!(f, "File I/O error: {}", e),
-            AppError::Json(e) => write!(f, "JSON parse error: {}", e),
-            AppError::Zip(e) => write!(f, "ZIP extraction error: {}", e),
-            AppError::Other(e) => write!(f, "Other error: {}", e),
+            AppError::Network(e) => write!(f, "網路錯誤: {}", e),
+            AppError::Io(e) => write!(f, "檔案 I/O 錯誤: {}", e),
+            AppError::Json(e) => write!(f, "JSON 解析錯誤: {}", e),
+            AppError::Zip(e) => write!(f, "ZIP 解壓錯誤: {}", e),
+            AppError::Cancelled => write!(f, "使用者已取消轉換"),
+            AppError::Other(e) => write!(f, "{}", e),
         }
     }
 }
