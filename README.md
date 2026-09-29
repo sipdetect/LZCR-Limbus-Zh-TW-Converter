@@ -1,7 +1,8 @@
-# LZCR
+<p align="center"> LZCR - Limbus Company 零協會文本正體中文轉換工具 </p>
 
-Limbus Company 零協會文本正體中文轉換工具
+<p align="center">   <img width="237" height="190" alt="LZCR" src="https://github.com/user-attachments/assets/7c923dbf-a1d4-449e-add6-eb8411bed15b" /> </p>
 
+---
 <img width="852" height="431" alt="{C245EE0B-2ED8-4DCE-A2C8-114499105A22}" src="https://github.com/user-attachments/assets/a6d80803-b19b-4ba2-b7d4-48ecafd6a072" />
 
 執行後會自動將遊戲改為正體中文。請在 Steam 安裝好遊戲後再執行此程式。
@@ -22,11 +23,8 @@ Limbus Company 零協會文本正體中文轉換工具
 
 
 ## 軟體 Icon
-
-目前還沒有合適的 Icon，假如有熱心人士想要提供協助可以聯絡以下信箱
-
-Email : ayin@mail.ibinah.com
-
+|
+|
 ## 安全
 
 <img width="1131" height="656" alt="{AD117E40-3AFB-4204-A84D-23AF344E64F8}" src="https://github.com/user-attachments/assets/fd6b1618-76a0-418a-8e65-b1173ec103fb" />
