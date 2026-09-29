@@ -23,8 +23,11 @@
 
 
 ## 軟體 Icon
-|
-|
+
+* 提供者   : Nina妮娜
+* 聯繫方式 : Nianqichen592@gmail[.]com
+
+
 ## 安全
 
 <img width="1131" height="656" alt="{AD117E40-3AFB-4204-A84D-23AF344E64F8}" src="https://github.com/user-attachments/assets/fd6b1618-76a0-418a-8e65-b1173ec103fb" />
