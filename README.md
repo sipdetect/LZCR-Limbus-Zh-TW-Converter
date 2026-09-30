@@ -2,6 +2,8 @@
 
 <p align="center">   <img width="237" height="190" alt="LZCR" src="https://github.com/user-attachments/assets/7c923dbf-a1d4-449e-add6-eb8411bed15b" /> </p>
 
+ <p align="center"> 下載傳送門 -> https://github.com/sipdetect/LZCR-Limbus-Zh-TW-Converter/releases/tag/C </p>
+
 ---
 <img width="852" height="431" alt="{C245EE0B-2ED8-4DCE-A2C8-114499105A22}" src="https://github.com/user-attachments/assets/a6d80803-b19b-4ba2-b7d4-48ecafd6a072" />
 
