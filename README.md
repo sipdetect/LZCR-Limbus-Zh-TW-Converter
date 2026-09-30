@@ -9,6 +9,15 @@
 
 每次執行都會**強制**從 [LocalizeLimbusCompany](https://github.com/LocalizeLimbusCompany/LocalizeLimbusCompany) 下載最新簡中套件，簡→正體後**覆寫**安裝至遊戲 `Lang/LLC_zh-Hant`，並為戰鬥語音氣泡上色。
 
+---
+
+ <p align="center"> 如果使用上遇到任何問題請加入以下 Discord : https://discord.gg/fxSGwDMYBR </p>
+
+<p align="center"> 這邊聚集了許多但丁們以及各種遊戲的玩家 , 大家都非常活躍熱情 !
+同時也能快速聯絡到我本人快速地替您解決問題 </p>
+
+---
+
 ## 更新速度
 
 遊戲劇情文本：零協會的文本釋出時間
